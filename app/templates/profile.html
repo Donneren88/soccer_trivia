@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Profile</h1>
+    <p>Hello, {{ current_user.username }}!</p>
+    <p><img src="{{ url_for('static', filename='avatars/' + current_user.avatar) }}" alt="Avatar" class="avatar"></p>
+    <form method="POST">
+        <label for="avatar">Choose an avatar:</label>
+        <select name="avatar" id="avatar">
+            <option value="default.png" {% if current_user.avatar == 'default.png' %}selected{% endif %}>Default</option>
+            <option value="avatar1.png" {% if current_user.avatar == 'avatar1.png' %}selected{% endif %}>Avatar 1</option>
+            <option value="avatar2.png" {% if current_user.avatar == 'avatar2.png' %}selected{% endif %}>Avatar 2</option>
+            <option value="avatar3.png" {% if current_user.avatar == 'avatar3.png' %}selected{% endif %}>Avatar 3</option>
+        </select>
+        <button type="submit">Update Profile</button>
+    </form>
+    <p><a href="{{ url_for('main.index') }}">Home</a></p>
+</body>
+</html>

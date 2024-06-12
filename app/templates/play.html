@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Trivia</title>
+    <style>
+        /* Add your styling here for the game interface similar to Kahoot */
+        .question-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .options-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .option {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid #000;
+        }
+        .option:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h1 id="question">Loading...</h1>
+        <div class="options-container">
+            <div class="option" id="option1" onclick="submitAnswer(1)">Option 1</div>
+            <div class="option" id="option2" onclick="submitAnswer(2)">Option 2</div>
+            <div class="option" id="option3" onclick="submitAnswer(3)">Option 3</div>
+            <div class="option" id="option4" onclick="submitAnswer(4)">Option 4</div>
+        </div>
+        <div id="score">Score: 0</div>
+    </div>
+
+    <script>
+        let currentQuestionId;
+        
+        function loadQuestion() {
+            fetch('/get_question')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.end) {
+                        document.getElementById('question').innerText = 'Game Over! Your Score: ' + data.score;
+                        document.getElementById('score').innerText = '';
+                        document.querySelectorAll('.option').forEach(option => option.style.display = 'none');
+                    } else {
+                        document.getElementById('question').innerText = data.question_text;
+                        document.getElementById('option1').innerText = data.options[0];
+                        document.getElementById('option2').innerText = data.options[1];
+                        document.getElementById('option3').innerText = data.options[2];
+                        document.getElementById('option4').innerText = data.options[3];
+                        currentQuestionId = data.id;
+                    }
+                });
+        }
+
+        function submitAnswer(option) {
+            fetch('/submit_answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question_id: currentQuestionId,
+                    answer: option
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('score').innerText = 'Score: ' + data.score;
+                loadQuestion();
+            });
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
