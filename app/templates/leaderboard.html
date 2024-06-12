@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        table {
+            width: 50%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Leaderboard</h1>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Score</th>
+        </tr>
+        {% for score in scores %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ score.user.username }}</td>
+            <td>{{ score.score }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('main.index') }}">Home</a>
+    </div>
+</body>
+</html>
